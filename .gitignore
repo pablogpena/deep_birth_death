@@ -4,7 +4,6 @@
 *.csv
 *.tar.gz
 *.keras
-MLE/
 data_inference/models/
 data_inference/pickles/
 simulations/simulations_no_fossil/

@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 # # Workspace configuration
 
-no_fossil_path <- "/workspace/coniferas/simulations/simulations_no_fossil/674_10k/"
+no_fossil_path <- "/workspace/phylo_estimation/simulations/674_10k/"
 
 # # Simulation configuration
 
 n_sim <- 10000
-n_years <- 251 # tree age, measured in millions of years, no se usa para nada ya xd
 n_tips <- 674
 complete = FALSE 
 

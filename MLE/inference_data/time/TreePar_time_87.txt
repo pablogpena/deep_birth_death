@@ -1,0 +1,63 @@
+Loading required package: Matrix
+Loading required package: subplex
+Loading required package: TreeSim
+Loading required package: geiger
+Loading required package: phytools
+Loading required package: maps
+Loading required package: deSolve
+Warning messages:
+1: package ‘Matrix’ was built under R version 4.2.3 
+2: package ‘phytools’ was built under R version 4.2.3 
+3: package ‘maps’ was built under R version 4.2.3 
+Rows: 100 Columns: 9
+── Column specification ────────────────────────────────────────────────────────────
+Delimiter: "|"
+chr (1): tree
+dbl (8): n_tips, r0, r1, a0, a1, time, frac0, frac1
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+Rows: 100 Columns: 9
+── Column specification ────────────────────────────────────────────────────────────
+Delimiter: "|"
+chr (1): tree
+dbl (8): n_tips, r0, r1, a0, a1, time, frac0, frac1
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+Rows: 100 Columns: 9
+── Column specification ────────────────────────────────────────────────────────────
+Delimiter: "|"
+chr (1): tree
+dbl (8): n_tips, r0, r1, a0, a1, time, frac0, frac1
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+Rows: 100 Columns: 9
+── Column specification ────────────────────────────────────────────────────────────
+Delimiter: "|"
+chr (1): tree
+dbl (8): n_tips, r0, r1, a0, a1, time, frac0, frac1
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+Rows: 100 Columns: 9
+── Column specification ────────────────────────────────────────────────────────────
+Delimiter: "|"
+chr (1): tree
+dbl (8): n_tips, r0, r1, a0, a1, time, frac0, frac1
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+Rows: 100 Columns: 9
+── Column specification ────────────────────────────────────────────────────────────
+Delimiter: "|"
+chr (1): tree
+dbl (8): n_tips, r0, r1, a0, a1, time, frac0, frac1
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+real	338m15.396s
+user	338m11.771s
+sys	0m6.700s

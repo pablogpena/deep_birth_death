@@ -3,8 +3,8 @@
 # Simulating birth dead constant
 args = commandArgs(trailingOnly=TRUE)
 library(TreeSim)
-source("/workspace/coniferas/simulations/code/Stadler-LTTplots-functions.R")
-source("/workspace/coniferas/simulations/config_sim.r")
+source("/workspace/phylo_estimation/simulations/code/Stadler-LTTplots-functions.R")
+source("/workspace/phylo_estimation/simulations/config_sim.r")
 
 data <- data.frame(n_tips=numeric(), r0=numeric(), r1=numeric(), a0=numeric(), a1=numeric(), time=numeric(),
                    frac0=numeric(), frac1=numeric(), tree=character(), stringsAsFactors = FALSE)
@@ -41,17 +41,17 @@ while (i < n_sim) {
     crown_limit <- -time - time_limit
 
     if (length(df_crown_age$origintime) == 0){
-        print(paste(Sys.time(), " simulation failed, it contains less tips"))
-        flush.console()
+        #print(paste(Sys.time(), " simulation failed, it contains less tips"))
+        #flush.console()
     } else if (count_living(simulation[[1]]) != n_tips) {
-        print(paste(Sys.time(), " simulation failed, it contains more living tips"))
-        flush.console()
+        #print(paste(Sys.time(), " simulation failed, it contains more living tips"))
+        #flush.console()
     } else if (count_dead(simulation[[1]]) != 0) {
-        print(paste(Sys.time(), " simulation failed, it contains more death tips"))
-        flush.console()
+        #print(paste(Sys.time(), " simulation failed, it contains more death tips"))
+        #flush.console()
     } else if (crown_age >= crown_limit) {
-        print(paste(Sys.time(), " crown age lower than shift"))
-        flush.console()
+        #print(paste(Sys.time(), " crown age lower than shift"))
+        #flush.console()
     } else {
         # Save .csv row
         tree <- write.tree(simulation, append=TRUE, digits=10, tree.names=TRUE)[1]
@@ -60,7 +60,7 @@ while (i < n_sim) {
 
         i <- i + 1
 
-        if(i%%1==0) {
+        if(i%%100==0) {
             print(paste(Sys.time(), i, args[1], " simulations processed"))
         }
     }

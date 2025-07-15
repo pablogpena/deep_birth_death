@@ -1,0 +1,52 @@
+Rows: 100 Columns: 9
+── Column specification ────────────────────────────────────────────────────────────
+Delimiter: "|"
+chr (1): tree
+dbl (8): n_tips, r0, r1, a0, a1, time, frac0, frac1
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+Rows: 100 Columns: 9
+── Column specification ────────────────────────────────────────────────────────────
+Delimiter: "|"
+chr (1): tree
+dbl (8): n_tips, r0, r1, a0, a1, time, frac0, frac1
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+Rows: 100 Columns: 9
+── Column specification ────────────────────────────────────────────────────────────
+Delimiter: "|"
+chr (1): tree
+dbl (8): n_tips, r0, r1, a0, a1, time, frac0, frac1
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+Rows: 100 Columns: 9
+── Column specification ────────────────────────────────────────────────────────────
+Delimiter: "|"
+chr (1): tree
+dbl (8): n_tips, r0, r1, a0, a1, time, frac0, frac1
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+Rows: 100 Columns: 9
+── Column specification ────────────────────────────────────────────────────────────
+Delimiter: "|"
+chr (1): tree
+dbl (8): n_tips, r0, r1, a0, a1, time, frac0, frac1
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+Rows: 100 Columns: 9
+── Column specification ────────────────────────────────────────────────────────────
+Delimiter: "|"
+chr (1): tree
+dbl (8): n_tips, r0, r1, a0, a1, time, frac0, frac1
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+real	0m54.760s
+user	0m58.137s
+sys	0m0.793s

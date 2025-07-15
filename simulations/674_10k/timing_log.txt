@@ -1,0 +1,51 @@
+Timing log - Fri 20 Jun 2025 06:11:05 PM UTC
+Running WW
+Loading required package: ape
+Loading required package: geiger
+Loading required package: phytools
+Loading required package: maps
+
+real	21609m54.789s
+user	21523m15.038s
+sys	60m12.879s
+-----
+Running BD
+Loading required package: ape
+Loading required package: geiger
+Loading required package: phytools
+Loading required package: maps
+
+real	16m0.836s
+user	16m3.983s
+sys	0m0.906s
+-----
+Running ME_rho_PGP
+Loading required package: ape
+Loading required package: geiger
+Loading required package: phytools
+Loading required package: maps
+
+real	231m6.263s
+user	230m56.080s
+sys	0m13.253s
+-----
+Running SR
+Loading required package: ape
+Loading required package: geiger
+Loading required package: phytools
+Loading required package: maps
+
+real	527m49.782s
+user	527m40.415s
+sys	0m11.458s
+-----
+Running HE
+Loading required package: ape
+Loading required package: geiger
+Loading required package: phytools
+Loading required package: maps
+
+real	164m31.650s
+user	164m27.940s
+sys	0m7.193s
+-----

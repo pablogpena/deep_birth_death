@@ -3,7 +3,7 @@
 micromamba activate my_r_env
 
 cd DDD
-bash run_DDD.r /workspace/phylo_estimation/simulations/treepar_dataset/674
+bash run_DDD.sh /workspace/deep_birth_death/simulations/treepar_dataset/674
 
 cd TreePar
-bash run_TreePar.r /workspace/phylo_estimation/simulations/treepar_dataset/674
+bash run_TreePar.sh /workspace/deep_birth_death/simulations/treepar_dataset/674

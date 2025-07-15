@@ -2,7 +2,7 @@
 library(ape)
 library(TreePar)
 library(readr)
-source("/workspace/phylo_estimation/MLE/TreePar/run_treepar_utils.r")
+source("/workspace/deep_birth_death/src/MLE_utils/run_treepar_utils.r")
 args = commandArgs(trailingOnly=TRUE)
 
 # +
@@ -12,7 +12,7 @@ n_tips <- as.integer(sub(".*/(\\d+)/?$", "\\1", data_path))
 print(n_tips)
 grid <- 0.2
 
-out_path <-  paste0("/workspace/phylo_estimation/MLE/inference_data/", n_tips, "/")
+out_path <-  paste0("/workspace/deep_birth_death//MLE/inference_data/", n_tips, "/")
 
 # +
 for (div in div_scenarios) {

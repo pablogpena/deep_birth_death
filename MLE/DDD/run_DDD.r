@@ -16,7 +16,7 @@ n_tips <- as.integer(sub(".*/(\\d+)/?$", "\\1", data_path))
 
 k <- n_tips + 1
 
-out_path <-  paste0("/workspace/phylo_estimation/MLE/inference_data/", n_tips, "/")
+out_path <-  paste0("/workspace/deep_birth_death/MLE/inference_data/", n_tips, "/")
 
 # +
 for (div in div_scenarios) {
@@ -73,11 +73,7 @@ for (div in div_scenarios) {
             )
         
         aic = AIC(dd_inf_results$loglik, 1)       
-        
-        
-
-        
-        
+          
         #Save the results
         out_data <- data.frame(index=i,
                        real_lambda = df$r0[i],

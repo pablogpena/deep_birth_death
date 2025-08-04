@@ -16,8 +16,7 @@ data <- data.frame(
 
 # +
 #valores simulación 
-n_sim <- 1000
-no_fossil_path <- "/workspace/phylo_estimation/simulations/674_10k/"
+n_sim <- 10000
 
 mu <- c(0)
 frac <- c(1)
@@ -25,23 +24,22 @@ frac <- c(1)
 r1 <- 1
 a0 <- 1
 a1 <- 1
-frac0 <- 0.83
+frac0 <- 1
 frac1 <- frac0
 times <- c(0)
 # -
 
 #n_tips <- c(87, 489, 674)   
+#n_tips <- c(674, 489, 87)
 n_tips <- c(674)
 for (n in n_tips) {
-    no_fossil_path <- paste("/workspace/phylo_estimation/simulations/674_1000_realrho_test/", sep = "")
-    #no_fossil_path <- paste("/workspace/phylo_estimation/simulations/", n, "_10k/", sep = "")
+    no_fossil_path <- paste("/workspace/deep_birth_death/simulations/dd/", n, "_10k/", sep = "")
     print(no_fossil_path)
     for (i in 1:n_sim) {
     
         lambda <- runif(1, 0.01, 4)
-        #k <- runif(1, n + 1, n*1.5)
-        #k <- as.integer(round(as.numeric(k)))
-        k <- 813
+        k <- runif(1, n + 1, n*1.5)
+        k <- as.integer(round(as.numeric(k)))
         print(k)
         
         #times <- c(0)

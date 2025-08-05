@@ -228,7 +228,7 @@ def new_get_regression_div_results(results, n_tips, scenario, norm, error):
     return df
 
 
-def plot_errors(resuts, n_tips, evo_type, norm, error):
+def plot_errors(results, n_tips, evo_type, norm, error):
 
     if evo_type in ["BD", "HE"]:
         param_names = ["r", "a"]
@@ -240,7 +240,7 @@ def plot_errors(resuts, n_tips, evo_type, norm, error):
         param_names = ["r0", "r1", "a0", "a1", "time"]
 
 
-    errors = resuts[n_tips][evo_type][norm][error]
+    errors = results[n_tips][evo_type][norm][error]
 
     for i, param in enumerate(param_names):
         values = errors[:, i]
@@ -257,8 +257,7 @@ def plot_errors(resuts, n_tips, evo_type, norm, error):
         plt.show()
 
 
-def plot_errors_boxplot(resuts, n_tips, norm, error):
-    n_trees_tested = 1000
+def plot_errors_boxplot(results, n_tips, norm, error):
 
     for evo_type in resuts[n_tips]:
         
@@ -274,7 +273,7 @@ def plot_errors_boxplot(resuts, n_tips, norm, error):
         else: 
             param_names = ["r0", "r1", "a0", "a1", "time"]
         # Get Absolute errors
-        errors =  resuts[n_tips][evo_type][norm][error]
+        errors =  results[n_tips][evo_type][norm][error]
         values = errors.shape[1]
         for i in range(values):
             fig, ax = plt.subplots(1, figsize=(3,5))
@@ -286,9 +285,8 @@ def plot_errors_boxplot(resuts, n_tips, norm, error):
             plt.show()        
 
 
-def predicted_minus_target_vs_target(data, resuts, tip, evo_type, label, norm, error):
+def predicted_minus_target_vs_target(data, results, tip, evo_type, label, norm, error):
 
-    # Definir parámetros según el tipo evolutivo
     if evo_type == "BD" or evo_type == "HE":
         param_names = ["r", "a"]
     elif evo_type == "ME": 
@@ -311,9 +309,7 @@ def predicted_minus_target_vs_target(data, resuts, tip, evo_type, label, norm, e
     else:
         axes_list = axes.flatten().tolist()
 
-    # Extraer errores del diccionario resuts usando las claves correctas
-    errors = resuts[tip][evo_type][norm][error]
-    # Filtrar y_test según el label actual y convertir a array
+    errors = results[tip][evo_type][norm][error]
     y_test = data[tip]['y_reg_test'][data[tip]['div_info_test'] == label]
     y_test = np.array(y_test.tolist())
 
@@ -321,7 +317,6 @@ def predicted_minus_target_vs_target(data, resuts, tip, evo_type, label, norm, e
         if i < n_params:
             param_name = param_names[i]
             
-            # Si errors es 2D, usar la columna i, sino ajustar
             if errors.ndim == 2:
                 err_i = errors[:, i]
             else:
@@ -387,3 +382,114 @@ def get_clipping_results(results, n_tips, scenario):
     df_above = pd.DataFrame([clipped_above], columns=columns, index=["Above %"])
 
     return df_total, df_below, df_above
+
+
+def plot_errors_MLE(results, n_tips, evo_type):
+
+    if evo_type in ["BD", "HE"]:
+        param_names = ["r", "a"]
+    elif evo_type == "ME":
+        param_names = ["r", "a", "time", "rho"]
+    elif evo_type == "SAT":
+        param_names = ["lambda"]
+    else:
+        param_names = ["r0", "r1", "a0", "a1", "time"]
+
+
+    raw_errors = results[n_tips][evo_type]["raw_error"]
+
+    for i, param in enumerate(param_names):
+        values = raw_errors[:, i]
+        
+        df_plot = pd.DataFrame({
+            'Error': values,
+            'Parameter': [param] * len(values)
+        })
+
+        plt.figure(figsize=(4, 5))
+        sns.swarmplot(data=df_plot, x="Parameter", y="Error", size=3, color='steelblue')
+        plt.title(f"{evo_type} — {param}")
+        plt.tight_layout()
+        plt.show()
+
+
+def plot_errors_boxplot_MLE(results, n_tips, evo_type):
+
+    if evo_type in ["BD", "HE"]:
+        param_names = ["r", "a"]
+    elif evo_type == "ME":
+        param_names = ["r", "a", "time", "rho"]
+    elif evo_type == "SAT":
+        param_names = ["lambda"]
+    else:
+        param_names = ["r0", "r1", "a0", "a1", "time"]
+
+
+    raw_errors = results[n_tips][evo_type]["raw_error"]
+    values = raw_errors.shape[1]
+    
+    for i in range(values):
+        fig, ax = plt.subplots(1, figsize=(3,5))
+        value = raw_errors[:, i]
+        ax.boxplot(value, showmeans=True)
+        label = param_names[i]
+        ax.set_title(label)
+        ax.set_xticklabels([])
+        plt.show() 
+
+
+def predicted_minus_target_vs_target_MLE(results, tip, evo_type):
+
+    if evo_type == "BD" or evo_type == "HE":
+        param_names = ["r", "a"]
+    elif evo_type == "ME": 
+        param_names = ["r", "a", "time", "rho"]
+    elif evo_type == "SAT":
+        param_names = ["lambda"]
+    else: 
+        param_names = ["r0", "r1", "a0", "a1", "time"]
+    
+    n_params = len(param_names)
+    n_cols = min(n_params, 3)
+    n_rows = math.ceil(n_params / n_cols)
+    fig, axes = plt.subplots(n_rows, n_cols, figsize=(20, 6*n_rows))
+    
+    sns.set_style('white')
+    sns.set_context('talk')
+    
+    if isinstance(axes, plt.Axes):
+        axes_list = [axes]
+    else:
+        axes_list = axes.flatten().tolist()
+
+    errors = results[tip][evo_type]["abs_error"]
+    y_test = results[tip][evo_type]["y_test"]
+    y_test = np.array(y_test.tolist())
+
+    for i, ax in enumerate(axes_list):
+        if i < n_params:
+            param_name = param_names[i]
+            
+            if errors.ndim == 2:
+                err_i = errors[:, i]
+            else:
+                err_i = errors
+            
+            sns.regplot(x=y_test[:, i], y=err_i, ci=95, n_boot=500, 
+                        scatter_kws={'s': 2, 'color': 'grey'}, 
+                        line_kws={'color': 'green', 'linewidth': 2}, ax=ax)
+
+            innerlimit = min(y_test[:, i])
+            outerlimit = max(y_test[:, i])
+            ax.plot([innerlimit, outerlimit], [0, 0], linewidth=2, color='red')
+
+            ax.set_title(f'{param_name}: target vs (target-predicted)')
+            ax.set_xlabel('target')
+            ax.set_ylabel('target - predicted')
+        else:
+            ax.axis('off')
+
+    fig.suptitle(f'Target vs (Target-Predicted) for {tip} tips, {evo_type} evolution type', fontsize=16)
+    plt.tight_layout()
+    plt.subplots_adjust(top=0.9)
+    plt.show()

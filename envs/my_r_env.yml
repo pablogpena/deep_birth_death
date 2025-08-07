@@ -1,0 +1,7 @@
+name: my_r_env
+channels:
+  - nodefaults
+  - conda-forge
+  - bioconda
+  - defaults
+prefix: /opt/conda/envs/my_r_env

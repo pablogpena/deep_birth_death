@@ -69,15 +69,12 @@ def load_dataset_vec(path_list):
 
     norm_r0 = []
     norm_r1 = []
-    norm_a0 = []
-    norm_a1 = []
     norm_mu0 = []
     norm_mu1 = []
     norm_lambda0 = []
     norm_lambda1 = []
     norm_time = []
-    norm_frac0 = []
-    norm_frac1 = []
+
 
     # Each path must correspond to a different simulated diversification scenario
     for i, path in enumerate(path_list):
@@ -107,15 +104,11 @@ def load_dataset_vec(path_list):
         
         norm_r0.extend(df['norm_r0'].to_numpy())
         norm_r1.extend(df['norm_r1'].to_numpy())
-        norm_a0.extend(df['norm_a0'].to_numpy())
-        norm_a1.extend(df['norm_a1'].to_numpy())
         norm_mu0.extend(df['norm_mu0'].to_numpy())
         norm_mu1.extend(df['norm_mu1'].to_numpy())
         norm_lambda0.extend(df['norm_lambda0'].to_numpy())
         norm_lambda1.extend(df['norm_lambda1'].to_numpy())
         norm_time.extend(df['norm_time'].to_numpy())
-        norm_frac0.extend(df['norm_frac0'].to_numpy())
-        norm_frac1.extend(df['norm_frac1'].to_numpy())
     
         # Save label from tree
         label.extend(np.zeros(len(tree_vector)) + i)
@@ -143,14 +136,10 @@ def load_dataset_vec(path_list):
     
     dataset.norm_r0 = norm_r0
     dataset.norm_r1 = norm_r1
-    dataset.norm_a0 = norm_a0
-    dataset.norm_a1 = norm_a1
     dataset.norm_mu0 = norm_mu0
     dataset.norm_mu1 = norm_mu1
     dataset.norm_lambda0 = norm_lambda0
     dataset.norm_lambda1 = norm_lambda1
     dataset.norm_time = norm_time
-    dataset.norm_frac0 = norm_frac0
-    dataset.norm_frac1 = norm_frac1
         
     return dataset

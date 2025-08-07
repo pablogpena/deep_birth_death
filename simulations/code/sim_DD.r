@@ -15,12 +15,12 @@ data <- data.frame(
 )
 
 # +
-#valores simulación 
+#Simulation conditions
 n_sim <- 10000
 
 mu <- c(0)
 frac <- c(1)
-#Valores centinelas para que el csv se genere igual que en las otras simulaciones 
+#Centinels values
 r1 <- 1
 a0 <- 1
 a1 <- 1
@@ -29,21 +29,18 @@ frac1 <- frac0
 times <- c(0)
 # -
 
-#n_tips <- c(87, 489, 674)   
-#n_tips <- c(674, 489, 87)
-n_tips <- c(674)
+n_tips <- c(674, 489, 87)
 for (n in n_tips) {
-    no_fossil_path <- paste("/workspace/deep_birth_death/simulations/dd/", n, "_10k/", sep = "")
+    no_fossil_path <- paste("/workspace/deep_birth_death/simulations/", n, "_10k/", sep = "")
     print(no_fossil_path)
+    k <- as.integer(round(n + 1))
     for (i in 1:n_sim) {
     
         lambda <- runif(1, 0.01, 4)
-        k <- runif(1, n + 1, n*1.5)
-        k <- as.integer(round(as.numeric(k)))
-        print(k)
+        #k <- runif(1, n + 1, n*1.5)
+        #k <- as.integer(round(as.numeric(k)))
         
-        #times <- c(0)
-        #Simulación
+        #Simulation
         simulation <- sim.rateshift.taxa(n, 1, lambda, mu, frac0, complete= FALSE, K = k)
     
         tree <- write.tree(simulation, append=TRUE, digits=10, tree.names=TRUE)[1]
@@ -52,7 +49,7 @@ for (n in n_tips) {
         ## Save .csv row
         data <- rbind(data, row)
         if(i%%1==0) {
-            print(paste(Sys.time(), i, " SAT_IS simulations processed"))
+            print(paste(Sys.time(), i, " DD simulations processed"))
              flush.console()
         }
     }

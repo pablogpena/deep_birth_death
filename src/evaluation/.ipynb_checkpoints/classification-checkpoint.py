@@ -39,16 +39,16 @@ from tensorflow.keras.models import Model
 def generate_class_results(model_path, X, y):
     results = dict()
     
-    nn_model = load_model(model_path + 'model.keras')
-    with open(model_path + 'model_data.pkl', 'rb') as f:
+    nn_model = load_model(model_path + 'temperature_model.keras')
+    with open(model_path + 'temperature_model_data.pkl', 'rb') as f:
         n_params, train_time = pickle.load(f)
-    with open(model_path + 'history.pkl', 'rb') as f:
+    with open(model_path + 'temperature_history.pkl', 'rb') as f:
         history = pickle.load(f)
 
     # Get classification metrics
     start_time = time()
     y_pred = nn_model.predict(X)
-    print("--- Inference time: ", (time() - start_time), "seconds ---")
+    print("--- Testing time normal model: ", (time() - start_time), "seconds ---")
     y_pred = np.argmax(y_pred, axis=1)
     y_test = np.argmax(y, axis=1)
 
@@ -72,8 +72,6 @@ def generate_class_results(model_path, X, y):
 # # Calibrate the model
 
 # +
-### DEFINE UTILITY FUNCTIONS FOR FITTING TEMPERATURE SCALING AND CALIBRATE PROBABILITIES ###
-
 def fit_TemperatureCalibration(train_X_y, valid_X_y=None, epochs=100):
     
     ### inspired by: https://github.com/stellargraph/stellargraph/blob/develop/stellargraph/calibration.py ###
@@ -133,7 +131,7 @@ def calibrated_proba(logits, temperature):
 
 
 # -
-def generate_class_results_calibrate_model(model_path, X, y):
+def generate_class_results_calibrated_model(model_path, X, y):
     results_calibrated_model = dict()
 
     split_idx = int(len(X) * 0.5)
@@ -141,14 +139,15 @@ def generate_class_results_calibrate_model(model_path, X, y):
     y_train, y_test = y[split_idx:], y[:split_idx]
     
     
-    nn_model = load_model(model_path + 'temperaturemodel.keras')
+    nn_model = load_model(model_path + 'temperature_model.keras')
         
-    with open(model_path + 'temperaturemodel_data.pkl', 'rb') as f:
+    with open(model_path + 'temperature_model_data.pkl', 'rb') as f:
         n_params, train_time = pickle.load(f)
-    with open(model_path + 'temperaturehistory.pkl', 'rb') as f:
+    with open(model_path + 'temperature_history.pkl', 'rb') as f:
         history = pickle.load(f)
     
     #Calibrate the model.
+    start_time = time()
     model_score = Model(inputs=nn_model.input, outputs=nn_model.get_layer('logits').output)
     
     X_train_calib = model_score.predict(x_train)
@@ -156,10 +155,9 @@ def generate_class_results_calibrate_model(model_path, X, y):
     
     temperature = fit_TemperatureCalibration((X_train_calib,y_train), (X_valid_calib,y_test), epochs=1000)
 
-    print(temperature)
     pred_logit = model_score.predict(X)
     pred_calib = calibrated_proba(pred_logit, temperature)
-    
+    print("--- Testing time temperature model: ", (time() - start_time), "seconds ---")
     y_pred = np.argmax(pred_calib, axis=1)
     
     y_test = np.argmax(y, axis=1)
@@ -243,5 +241,17 @@ def plot_conf_mat(y_pred, y_val, names, i):
     print(classification_report(y_val, y_pred, digits=4))
 
 
+# # Train plots 
 
+def train_plot(ax, i, metric, results):
+    ax.plot(results[i]['history'][metric],
+            linestyle='-', label='Train', color='blue', linewidth=.7)
+    ax.plot(results[i]['history']['val_' + metric],
+            linestyle='--', label='Validation', color='blue', linewidth=.7)
+    
 
+    ax.set_xlabel('Epoch')
+    ax.set_ylabel(metric)
+    ax.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
+    
+    ax.set_title(i)

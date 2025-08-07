@@ -37,48 +37,9 @@ switch(args[1],
         get_time <- function() {return(0)}
         
         time_limit <- 0
-    },
-       
-    ME={
-        get_r0 <- function() {return(runif(1, 0.1, 1))}
-        get_a0 <- function() {return(runif(1, 0.5, 0.9))} 
-        get_frac0 <- function() {return(1)} 
-        
-        get_r1 <- function(r0) {return (r0)}
-        get_a1 <- function(a0) {return (a0)}
-        get_frac1 <- function(frac0) {return (0.1)}
-        get_time <- function() {return(runif(1, 3, 20))}
-        
-        time_limit <- 5
-    },
-
-    ME_PGP={
-        get_r0 <- function() {return(runif(1, 0.1, 1))}
-        get_a0 <- function() {return(runif(1, 0.3, 0.8))} 
-        get_frac0 <- function() {return(1)} 
-        
-        get_r1 <- function(r0) {return (r0)}
-        get_a1 <- function(a0) {return (a0)}
-        get_frac1 <- function(frac0) {return (0.1)}
-        get_time <- function() {return(runif(1, 3, 20))}
-        
-        time_limit <- 5
-    },
+    }, 
        
     ME_rho={
-        get_r0 <- function() {return(runif(1, 0.1, 1))}
-        get_a0 <- function() {return(runif(1, 0.5, 0.9))} 
-        get_frac0 <- function() {return(1)} 
-        
-        get_r1 <- function(r0) {return (r0)}
-        get_a1 <- function(a0) {return (a0)}
-        get_frac1 <- function(frac0) {return(runif(1, 0.1, 0.3))}
-        get_time <- function() {return(runif(1, 3, 20))}
-        
-        time_limit <- 5
-    },  
-       
-    ME_rho_PGP={
         get_r0 <- function() {return(runif(1, 0.1, 1))}
         get_a0 <- function() {return(runif(1, 0.3, 0.8))} 
         get_frac0 <- function() {return(1)} 

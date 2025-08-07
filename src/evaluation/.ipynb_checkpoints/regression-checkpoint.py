@@ -13,108 +13,6 @@ import matplotlib.pyplot as plt
 
 # -
 
-# # Results structure
-# * 674
-#  * BD
-#    * no_norm
-#      * MAE
-#      * MAE_norm
-#      
-#      * n_params
-#      * train_time
-#      * history
-#    * norm
-#      * MAE   
-#      * MAE_norm
-#
-#      * n_params
-#      * train_time
-#      * history
-#    
-#  * HE
-#    * no_norm
-#      * ...
-#    * norm
-#  * ME
-#  * SR
-#  * SAT
-#  
-# * 489
-#  * BD
-#  * ...
-#  * SAT
-#  
-# * 87
-#  * ...
-
-# # Generate results
-
-def generate_reg_results(model_path, X, y, y_norm, div_info, resc_factor, scenario, label, norm):
-    results = dict()
-    
-    nn_model = load_model(model_path + 'model.keras')
-            
-    with open(model_path + 'model_data.pkl', 'rb') as f:
-        n_params, train_time = pickle.load(f)
-    with open(model_path + 'history.pkl', 'rb') as f:
-        history = pickle.load(f)
-
-    # Get regression values of the corresponding scenario
-    X = X[div_info == label]
-    if norm != 'no_norm':
-        y = y_norm[div_info == label]
-    else:
-        y = y[div_info == label]
-    y = [np.array(elem) for elem in y]            
-    
-    ### Predictions
-    start_time = time()
-    y_pred = nn_model.predict(X, verbose=0)
-    ex_time = time() - start_time
-    print("--- Inference time: ", scenario, "scenario",
-          "&", norm, ex_time, "seconds ---")           
-
-    ### Get real values for MAEs 
-    y = np.array(y)
-
-    ### Desrescale predicted values for each rate in norm trained models
-    if norm != 'no_norm':
-        resc_factor_test = resc_factor[div_info == label]
-        if scenario == "BD" or scenario == "HE" or scenario == "SAT":
-            param_idx = [0]
-        elif scenario == "ME":
-            param_idx = [0, 2]
-        elif scenario == "SR" or scenario == "WW":
-            param_idx = [0, 1, 4]  
-        # Get real r and T 
-        y_pred = [[y / r if i in param_idx else y for i, y in enumerate(sublist)] \
-                  for sublist, r in zip(y_pred, resc_factor)]
-
-    # Get lambda and mu for each model  
-    y_pred = np.array(y_pred)
-    y_pred = _extend_y_values(y_pred, scenario)  
-    y = _extend_y_values(y, scenario)
-
-    #Get MAE and MAE_norm for our models model and save them
-    results['MAE'] = _get_MAE(y_pred, y)
-    results['MAE_norm'] = _get_MAE_norm(y_pred, y,
-                                       resc_factor=resc_factor,
-                                       scenario= scenario)
-    return results, ex_time
-
-
-# # Parameters values y_pred and y_test
-# * BD, HE
-#  * r, a, lambda, mu
-# * ME
-#  * r, a, time, frac, lambda, mu
-# * SR
-#  * r0, r1, a0, a1, time, lambda0, lambda1, mu0, mu1
-# * SAT
-#  * lambda
-# * WW
-#  * r0, r1, a0, a1, time, lambda0, lambda1, mu0, mu1
-
 def _extend_y_values(y_list, scenario):
     if scenario=="BD" or scenario=="HE" or scenario=="ME":
         mu = (y_list[:, 1]*y_list[:, 0])/(1-y_list[:, 1])
@@ -136,82 +34,7 @@ def _extend_y_values(y_list, scenario):
 
 # # Regression metrics
 
-def _get_MAE(y_pred, y_real):
-    total = 0  
-    for y_pred_i, y_real_i in zip(y_pred, y_real):
-        total += abs(y_pred_i - y_real_i)
-    return total/len(y_pred)
-
-
-def _get_MAE_norm(y_pred, y_real, resc_factor, scenario):
-    total = 0 
-    
-    if scenario == "BD" or scenario == "HE":
-        param_idx = [0, 2, 3] #we also reescale lambda and mu 
-    elif scenario == "SAT":
-        param_idx = [0] 
-    elif scenario == "ME":
-        param_idx = [0, 2, 4, 5] #we also reescale lambda and mu
-    elif scenario == "SR" or scenario == "WW":
-        param_idx = [0, 1, 4, 5, 6, 7, 8]  #we also reescale lambda and mu
-    
-    #Reescale baack np. arrays transforms into list
-    y_pred = [[y * r if i in param_idx else y for i, y in enumerate(sublist)] for sublist, r in zip(y_pred, resc_factor)]  
-    y_real = [[y * r if i in param_idx else y for i, y in enumerate(sublist)] for sublist, r in zip(y_real, resc_factor)]
-
-    #Get back to np.array
-    y_pred = np.array(y_pred)
-    y_real = np.array(y_real)
-    
-    #Get MAE 
-    for y_pred_i, y_real_i in zip(y_pred, y_real):
-            total += abs(y_pred_i - y_real_i)
-            
-    return total/len(y_pred)
-
-
-# # Regression metrics
-
-def get_regression_norm_results(results, n_tips, scenarios, norm):
-    col = ['norm', 'no_norm']
-    idx = ['MAE', 'MAE_norm']
-
-    df = pd.DataFrame(columns=col, index=idx)
-
-    for norm in col:
-        for metric in idx:
-            total = 0
-            for scenario in scenarios:
-                total += np.mean(results[n_tips][scenario][norm][metric])
-            mean = total/len(scenarios)
-
-            df.at[metric, norm] = mean
-
-    return df
-
-
-def get_regression_div_results(results, n_tips, scenario, norm):
-    reg_values = {
-                  'BD':['r', 'a', 'lambda', 'mu'],
-                  'HE':['r', 'a', 'lambda', 'mu'],
-                  'ME':['r', 'a', 'time', 'frac', 'lambda', 'mu'],
-                  'SR':['r0', 'r1', 'a0', 'a1', 'time', 'lambda0', 'lambda1', 'mu0', 'mu1'],
-                  'WW':['r0', 'r1', 'a0', 'a1', 'time', 'lambda0', 'lambda1', 'mu0', 'mu1'],
-                  'SAT':['lambda 0'],
-    }
-    
-    idx = ['MAE', 'MAE_norm']
-
-    df = pd.DataFrame(columns=reg_values[scenario], index=idx)
-
-    for i, param in enumerate(reg_values[scenario]):
-        for metric in idx:
-            df.at[metric, param] = results[n_tips][scenario][norm][metric][i]
-
-    return df
-
-
-def new_get_regression_div_results(results, n_tips, scenario, norm, error):
+def get_regression_metrics(results, n_tips, scenario, error):
     reg_values = {
         'BD': ['r', 'a'],
         'HE': ['r', 'a'],
@@ -221,78 +44,107 @@ def new_get_regression_div_results(results, n_tips, scenario, norm, error):
         'SAT': ['lambda 0'],
     }
     
-    values = results[n_tips][scenario][norm][error]
+    values = results[n_tips][scenario][error]
 
-    df = pd.DataFrame([values], columns=reg_values[scenario], index=['MAE'])
+    df = pd.DataFrame([values], columns=reg_values[scenario], index=[str(error)])
 
     return df
 
 
-def plot_errors(results, n_tips, evo_type, norm, error):
+# # Errors plots
 
-    if evo_type in ["BD", "HE"]:
+def plot_errors(results, n_tips, evo_type, save_path=None):
+    if evo_type in ("BD", "HE"):
         param_names = ["r", "a"]
+        width, height = 8, 5
     elif evo_type == "ME":
         param_names = ["r", "a", "time", "rho"]
+        width, height = 20, 5
     elif evo_type == "SAT":
-        param_names = ["lambda"]
+        param_names = ["lambda0"]
+        width, height = 3, 5
     else:
         param_names = ["r0", "r1", "a0", "a1", "time"]
+        width, height = 20, 5
 
+    errors = results[n_tips][evo_type]["raw_error"]
+    num_params = errors.shape[1]
 
-    errors = results[n_tips][evo_type][norm][error]
+    width = max(4 * num_params, 6)
+    height = 5
+    fig, axes = plt.subplots(1, num_params, figsize=(width, height), facecolor='white')
 
-    for i, param in enumerate(param_names):
+    if num_params == 1:
+        axes = [axes]
+
+    for i, ax in enumerate(axes):
         values = errors[:, i]
-        
         df_plot = pd.DataFrame({
-            'Error': values,
-            'Parameter': [param] * len(values)
+            "Error": values,
+            "Parameter": [param_names[i]] * len(values)
         })
 
-        plt.figure(figsize=(4, 5))
-        sns.swarmplot(data=df_plot, x="Parameter", y="Error", size=3, color='steelblue')
-        plt.title(f"{evo_type} — {param}")
-        plt.tight_layout()
+        sns.swarmplot(data=df_plot, x="Parameter", y="Error", size=3, color="steelblue", ax=ax)
+        ax.set_title(f"{evo_type} — {param_names[i]}")
+        ax.set_xlabel("")
+        ax.set_ylabel("Error")
+        ax.set_xticklabels([])
+
+    plt.subplots_adjust(wspace=0.75)
+
+    if save_path:
+        os.makedirs(os.path.dirname(save_path), exist_ok=True)
+        fig.savefig(save_path, dpi=300, bbox_inches="tight")
+        plt.close(fig)
+    else:
         plt.show()
 
 
-def plot_errors_boxplot(results, n_tips, norm, error):
+def plot_errors_boxplot(results, n_tips, evo_type, save_path=None):
+    if evo_type in ("BD", "HE"):
+        param_names = ["r", "a"]
+        width, height = 8, 5
+    elif evo_type == "ME":
+        param_names = ["r", "a", "time", "rho"]
+        width, height = 20, 5
+    elif evo_type == "SAT":
+        param_names = ["lambda0"]
+        width, height = 3, 5
+    else:
+        param_names = ["r0", "r1", "a0", "a1", "time"]
+        width, height = 20, 5
 
-    for evo_type in resuts[n_tips]:
-        
-        #Get parameter names
-        if evo_type == "BD" or evo_type == "HE":
-            param_names = ["r", "a"]
-        elif evo_type == "ME": 
-            param_names = ["r", "a", "time", "rho"]
-        elif evo_type == "SAT":
-            param_names = ["lambda"]
-            
-            
-        else: 
-            param_names = ["r0", "r1", "a0", "a1", "time"]
-        # Get Absolute errors
-        errors =  results[n_tips][evo_type][norm][error]
-        values = errors.shape[1]
-        for i in range(values):
-            fig, ax = plt.subplots(1, figsize=(3,5))
-            value = errors[:, i]
-            ax.boxplot(value, showmeans=True)
-            label = param_names[i]
-            ax.set_title(label)
-            ax.set_xticklabels([])
-            plt.show()        
+    errors = results[n_tips][evo_type]["raw_error"]
+    num_params = errors.shape[1]
+
+    fig, axes = plt.subplots(1, num_params, figsize=(width, height), facecolor='white')
+
+    if num_params == 1:
+        axes = [axes]
+
+    for i, ax in enumerate(axes):
+        ax.boxplot(errors[:, i], showmeans=True)
+        ax.set_title(f"{evo_type} — {param_names[i]}")
+        ax.set_xticklabels([])
+
+    plt.subplots_adjust(wspace=0.5)
+
+    if save_path:
+        os.makedirs(os.path.dirname(save_path), exist_ok=True)
+        fig.savefig(save_path, dpi=300, bbox_inches='tight')
+        plt.close(fig)
+    else:
+        plt.show()
 
 
-def predicted_minus_target_vs_target(data, results, tip, evo_type, label, norm, error):
+def predicted_minus_target_vs_target(results, tip, evo_type):
 
     if evo_type == "BD" or evo_type == "HE":
         param_names = ["r", "a"]
     elif evo_type == "ME": 
         param_names = ["r", "a", "time", "rho"]
     elif evo_type == "SAT":
-        param_names = ["lambda"]
+        param_names = ["lambda0"]
     else: 
         param_names = ["r0", "r1", "a0", "a1", "time"]
     
@@ -309,9 +161,10 @@ def predicted_minus_target_vs_target(data, results, tip, evo_type, label, norm, 
     else:
         axes_list = axes.flatten().tolist()
 
-    errors = results[tip][evo_type][norm][error]
-    y_test = data[tip]['y_reg_test'][data[tip]['div_info_test'] == label]
-    y_test = np.array(y_test.tolist())
+    errors = results[tip][evo_type]["abs_error"]
+    y_test = results[tip][evo_type]['real_values']
+
+    y_test = np.array(y_test)
 
     for i, ax in enumerate(axes_list):
         if i < n_params:
@@ -324,42 +177,25 @@ def predicted_minus_target_vs_target(data, results, tip, evo_type, label, norm, 
             
             sns.regplot(x=y_test[:, i], y=err_i, ci=95, n_boot=500, 
                         scatter_kws={'s': 2, 'color': 'grey'}, 
-                        line_kws={'color': 'green', 'linewidth': 2}, ax=ax)
+                        line_kws={'color': 'orange', 'linewidth': 2}, ax=ax)
 
             innerlimit = min(y_test[:, i])
             outerlimit = max(y_test[:, i])
-            ax.plot([innerlimit, outerlimit], [0, 0], linewidth=2, color='red')
+            ax.plot([innerlimit, outerlimit], [0, 0], linewidth=2, color='purple')
 
-            ax.set_title(f'{param_name}: target vs (target-predicted)')
+            ax.set_title(param_name)
             ax.set_xlabel('target')
             ax.set_ylabel('target - predicted')
         else:
             ax.axis('off')
 
-    fig.suptitle(f'Target vs (Target-Predicted) for {tip} tips, {evo_type} evolution type', fontsize=16)
+    fig.suptitle(f'Target vs (Target-Predicted) for {tip} tips, {evo_type} diversification scenario', fontsize=20, fontweight='bold')
     plt.tight_layout()
-    plt.subplots_adjust(top=0.9)
+    plt.subplots_adjust(top=0.85)
     plt.show()
 
 
-def get_MLE_regression_div_results(results, n_tips, scenario, error):
-    reg_values = {
-        'BD': ['a', 'r'],
-        'HE': ['a', 'r'],
-        'ME': ['a', 'r', 'frac', 'time'],
-        'SR': ['a0', 'a1', 'r0', 'r1', 'time'],
-        'WW': ['a0', 'a1', 'r0', 'r1', 'time'],
-        'SAT': ['lambda 0'],
-    }
-    
-    values = results[n_tips][scenario][error]
-    if error == "MAE":
-        df = pd.DataFrame([values], columns=reg_values[scenario], index=['MAE'])
-    else: 
-        df = pd.DataFrame([values], columns=reg_values[scenario], index=['MRE'])
-
-    return df
-
+# # Clipping percentages
 
 def get_clipping_results(results, n_tips, scenario):
     reg_values = {
@@ -382,114 +218,3 @@ def get_clipping_results(results, n_tips, scenario):
     df_above = pd.DataFrame([clipped_above], columns=columns, index=["Above %"])
 
     return df_total, df_below, df_above
-
-
-def plot_errors_MLE(results, n_tips, evo_type):
-
-    if evo_type in ["BD", "HE"]:
-        param_names = ["r", "a"]
-    elif evo_type == "ME":
-        param_names = ["r", "a", "time", "rho"]
-    elif evo_type == "SAT":
-        param_names = ["lambda"]
-    else:
-        param_names = ["r0", "r1", "a0", "a1", "time"]
-
-
-    raw_errors = results[n_tips][evo_type]["raw_error"]
-
-    for i, param in enumerate(param_names):
-        values = raw_errors[:, i]
-        
-        df_plot = pd.DataFrame({
-            'Error': values,
-            'Parameter': [param] * len(values)
-        })
-
-        plt.figure(figsize=(4, 5))
-        sns.swarmplot(data=df_plot, x="Parameter", y="Error", size=3, color='steelblue')
-        plt.title(f"{evo_type} — {param}")
-        plt.tight_layout()
-        plt.show()
-
-
-def plot_errors_boxplot_MLE(results, n_tips, evo_type):
-
-    if evo_type in ["BD", "HE"]:
-        param_names = ["r", "a"]
-    elif evo_type == "ME":
-        param_names = ["r", "a", "time", "rho"]
-    elif evo_type == "SAT":
-        param_names = ["lambda"]
-    else:
-        param_names = ["r0", "r1", "a0", "a1", "time"]
-
-
-    raw_errors = results[n_tips][evo_type]["raw_error"]
-    values = raw_errors.shape[1]
-    
-    for i in range(values):
-        fig, ax = plt.subplots(1, figsize=(3,5))
-        value = raw_errors[:, i]
-        ax.boxplot(value, showmeans=True)
-        label = param_names[i]
-        ax.set_title(label)
-        ax.set_xticklabels([])
-        plt.show() 
-
-
-def predicted_minus_target_vs_target_MLE(results, tip, evo_type):
-
-    if evo_type == "BD" or evo_type == "HE":
-        param_names = ["r", "a"]
-    elif evo_type == "ME": 
-        param_names = ["r", "a", "time", "rho"]
-    elif evo_type == "SAT":
-        param_names = ["lambda"]
-    else: 
-        param_names = ["r0", "r1", "a0", "a1", "time"]
-    
-    n_params = len(param_names)
-    n_cols = min(n_params, 3)
-    n_rows = math.ceil(n_params / n_cols)
-    fig, axes = plt.subplots(n_rows, n_cols, figsize=(20, 6*n_rows))
-    
-    sns.set_style('white')
-    sns.set_context('talk')
-    
-    if isinstance(axes, plt.Axes):
-        axes_list = [axes]
-    else:
-        axes_list = axes.flatten().tolist()
-
-    errors = results[tip][evo_type]["abs_error"]
-    y_test = results[tip][evo_type]["y_test"]
-    y_test = np.array(y_test.tolist())
-
-    for i, ax in enumerate(axes_list):
-        if i < n_params:
-            param_name = param_names[i]
-            
-            if errors.ndim == 2:
-                err_i = errors[:, i]
-            else:
-                err_i = errors
-            
-            sns.regplot(x=y_test[:, i], y=err_i, ci=95, n_boot=500, 
-                        scatter_kws={'s': 2, 'color': 'grey'}, 
-                        line_kws={'color': 'green', 'linewidth': 2}, ax=ax)
-
-            innerlimit = min(y_test[:, i])
-            outerlimit = max(y_test[:, i])
-            ax.plot([innerlimit, outerlimit], [0, 0], linewidth=2, color='red')
-
-            ax.set_title(f'{param_name}: target vs (target-predicted)')
-            ax.set_xlabel('target')
-            ax.set_ylabel('target - predicted')
-        else:
-            ax.axis('off')
-
-    fig.suptitle(f'Target vs (Target-Predicted) for {tip} tips, {evo_type} evolution type', fontsize=16)
-    plt.tight_layout()
-    plt.subplots_adjust(top=0.9)
-    plt.show()

@@ -10,53 +10,10 @@ Warning messages:
 2: package ‘phytools’ was built under R version 4.2.3 
 3: package ‘maps’ was built under R version 4.2.3 
 Rows: 100 Columns: 9
-── Column specification ────────────────────────────────────────────────────────────
+── Column specification ───────────────────────────────────────────────────────────────────────────────────────────────────
 Delimiter: "|"
 chr (1): tree
 dbl (8): n_tips, r0, r1, a0, a1, time, frac0, frac1
 
 ℹ Use `spec()` to retrieve the full column specification for this data.
 ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-Rows: 100 Columns: 9
-── Column specification ────────────────────────────────────────────────────────────
-Delimiter: "|"
-chr (1): tree
-dbl (8): n_tips, r0, r1, a0, a1, time, frac0, frac1
-
-ℹ Use `spec()` to retrieve the full column specification for this data.
-ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-Rows: 100 Columns: 9
-── Column specification ────────────────────────────────────────────────────────────
-Delimiter: "|"
-chr (1): tree
-dbl (8): n_tips, r0, r1, a0, a1, time, frac0, frac1
-
-ℹ Use `spec()` to retrieve the full column specification for this data.
-ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-Rows: 100 Columns: 9
-── Column specification ────────────────────────────────────────────────────────────
-Delimiter: "|"
-chr (1): tree
-dbl (8): n_tips, r0, r1, a0, a1, time, frac0, frac1
-
-ℹ Use `spec()` to retrieve the full column specification for this data.
-ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-Rows: 100 Columns: 9
-── Column specification ──────────────────────────────────────────────────────────────────────────────────────────────────────
-Delimiter: "|"
-chr (1): tree
-dbl (8): n_tips, r0, r1, a0, a1, time, frac0, frac1
-
-ℹ Use `spec()` to retrieve the full column specification for this data.
-ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-Error in file(file, ifelse(append, "a", "w")) : 
-  cannot open the connection
-Calls: save_inference_results -> write.table -> file
-In addition: Warning message:
-In file(file, ifelse(append, "a", "w")) :
-  cannot open file '/workspace/phylo_estimation/MLE/inference_data/674//TreePar_inference_674_SR.csv': No such file or directory
-Execution halted
-
-real	1076m49.626s
-user	1075m43.793s
-sys	0m30.956s

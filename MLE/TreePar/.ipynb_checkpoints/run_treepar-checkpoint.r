@@ -7,7 +7,8 @@ args = commandArgs(trailingOnly=TRUE)
 
 # +
 data_path <- as.character(args[1])
-div_scenarios <- c("BD", "HE", "ME", "SAT", "SR", "WW")
+#div_scenarios <- c("BD", "HE", "ME", "SAT", "SR", "WW")
+div_scenarios <- c("SR")
 n_tips <- as.integer(sub(".*/(\\d+)/?$", "\\1", data_path))
 print(n_tips)
 grid <- 0.2

@@ -3,6 +3,7 @@ from ete3 import Tree
 from dataset_code.encoding import *
 
 from tqdm import tqdm
+import matplotlib.pyplot as plt
 
 import multiprocessing
 
@@ -74,3 +75,23 @@ def load_trees_from_array(trees, return_resc_factor=False):
     
     else:
         return encoded_trees.to_numpy()
+
+
+def plot_latent_points(embedding, labels, label_names, empirical=None):
+
+    df = pd.DataFrame(dict(x=embedding[:, 0], y=embedding[:, 1], label=labels))
+
+    f, ax = plt.subplots(1, figsize=(10, 10))
+
+    scatter = ax.scatter(df['x'], df['y'], c=df.label.astype('category').cat.codes)
+
+    plt.legend(handles=scatter.legend_elements()[0], labels=label_names, title="Label",
+              loc='upper center', bbox_to_anchor=(0.5, -0.05), fancybox=True)
+    
+    if empirical is not None:
+        scatter = ax.scatter(empirical[:,0], empirical[:,1],
+                             s=500, c='tab:orange', marker="x")
+    
+    
+        
+    plt.show()

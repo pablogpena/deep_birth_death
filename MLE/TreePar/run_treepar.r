@@ -74,7 +74,6 @@ for (div in div_scenarios) {
         extinction_inference <- bd.shifts.optim(tree_data[[1]], c(rho,1), grid, tree_data[[2]], tree_data[[3]], ME=TRUE)
         
         #Process shift results   
-
         time_inference_data <- process_time_inference(unlist(time_inference[[2]]))
         cbd_inference_data <- time_inference_data$cbd
         shift_inference_data <- time_inference_data$shift

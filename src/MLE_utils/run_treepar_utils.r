@@ -64,7 +64,7 @@ save_inference_results <- function(csv_path, idx,
   out_data <- data.frame(
     index = idx,
 
-    # Real values (extraídos desde la fila real_data_row)
+    # Real values 
     real_a0 = real_data_row$a0,
     real_a1 = real_data_row$a1,
     real_r0 = real_data_row$r0,

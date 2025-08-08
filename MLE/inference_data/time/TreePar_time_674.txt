@@ -17,3 +17,7 @@ dbl (8): n_tips, r0, r1, a0, a1, time, frac0, frac1
 
 ℹ Use `spec()` to retrieve the full column specification for this data.
 ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+real	727m59.939s
+user	727m45.714s
+sys	0m13.823s

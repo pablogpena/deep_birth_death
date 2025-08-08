@@ -199,11 +199,11 @@ def predicted_minus_target_vs_target(results, tip, evo_type):
 
 def get_clipping_results(results, n_tips, scenario):
     reg_values = {
-        'BD': ['a', 'r'],
-        'HE': ['a', 'r'],
-        'ME': ['a', 'r', 'frac', 'time'],
-        'SR': ['a0', 'a1', 'r0', 'r1', 'time'],
-        'WW': ['a0', 'a1', 'r0', 'r1', 'time'],
+        'BD': ['r', 'a'],
+        'HE': ['r', 'a'],
+        'ME': ['r', 'a', 'time', 'frac'],
+        'SR': ['r0', 'r1', 'a0', 'a1', 'time'],
+        'WW': ['r0', 'r1', 'a0', 'a1', 'time'],
         'SAT': ['lambda 0'],
     }
 

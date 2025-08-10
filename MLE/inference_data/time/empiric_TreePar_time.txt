@@ -1,0 +1,16 @@
+Loading required package: ape
+Loading required package: Matrix
+Loading required package: subplex
+Loading required package: TreeSim
+Loading required package: geiger
+Loading required package: phytools
+Loading required package: maps
+Loading required package: deSolve
+Warning messages:
+1: package ‘Matrix’ was built under R version 4.2.3 
+2: package ‘phytools’ was built under R version 4.2.3 
+3: package ‘maps’ was built under R version 4.2.3 
+
+real	45m16.032s
+user	45m18.818s
+sys	0m0.851s

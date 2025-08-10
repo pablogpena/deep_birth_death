@@ -90,7 +90,7 @@ for (div in div_scenarios) {
             sep=',')
         
         
-        csv_path <- file.path(out_path, paste0("TreePar_inference_", n_tips, "_", div, ".csv"))
+        #csv_path <- file.path(out_path, paste0("TreePar_inference_", n_tips, "_", div, ".csv"))
 
     }
 

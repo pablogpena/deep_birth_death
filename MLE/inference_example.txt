@@ -1,9 +1,11 @@
 ##Example for runing inference
 
-micromamba activate my_r_env
+micromamba activate r_env
 
-cd DDD
 bash run_DDD.sh /workspace/deep_birth_death/simulations/treepar_dataset/674
+bash run_DDD_empiric.sh
 
-cd TreePar
+micromamba activate treepar
+
 bash run_TreePar.sh /workspace/deep_birth_death/simulations/treepar_dataset/674
+bash run_TreePar_empiric.sh

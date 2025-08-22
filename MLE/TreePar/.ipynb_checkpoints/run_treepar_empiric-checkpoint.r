@@ -98,7 +98,7 @@ for (tree in tree_names) {
         estimated_frac_1_me = me_inference_data$magnitude,
         estimated_time_me = me_inference_data$time
   )
-       # Guardamos la fila en el CSV
+       # Save row at CSV
        write.table(
            out_data,
            file = csv_path,

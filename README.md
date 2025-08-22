@@ -49,7 +49,7 @@ For questions or suggestions regarding this repository, please contact:
 
 - **Pablo G. Peña** – Email: pgutierrez@rjb.csic.es
 - **Guillermo Iglesias** - Email: guillermo.iglesias@upm.es
-- GitHub: [https://github.com/pablogpena](https://github.com/pablogpena), [https://github.com/guillermoih](https://github.com/guillermoih)
+- GitHubs: [https://github.com/pablogpena](https://github.com/pablogpena), [https://github.com/guillermoih](https://github.com/guillermoih)
 
   ## Preprint
   Peña P.G., Iglesias G., Talavera E., Sanmartín I., Meseguer A.S. (2025) *On the utility of Deep Learning for model classification and parameter estimation on complex diversification scenarios*. [bioRxiv](https://www.biorxiv.org/content/10.1101/2025.01.01.123456)

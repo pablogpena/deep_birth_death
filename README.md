@@ -100,5 +100,5 @@ Rscript sim_DD.r
 
 Peña P.G., Iglesias G., Talavera E., Meseguer A.S. & Sanmartin I. (2025). *On the utility of Deep Learning for model classification and parameter estimation on complex diversification scenarios*.
 
-bioRxiv: https://www.biorxiv.org/content/10.1101/2025.01.01.123456
+bioRxiv: https://www.biorxiv.org/content/10.1101/2025.08.27.671290v2
   

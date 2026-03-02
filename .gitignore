@@ -7,3 +7,5 @@
 data_inference/models/
 data_inference/pickles/
 simulations/simulations_no_fossil/
+noise_test.ipynb
+transform_phylo_Megaphylo.ipynb

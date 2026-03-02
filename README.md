@@ -1,56 +1,104 @@
-# Deep Birth-Death: Deep Learning for Model Classification & Parameter Estimation
+# Deep Birth-Death
 
-This repository accompanies the manuscript *"On the utility of Deep Learning for model classification and parameter estimation on complex diversification scenarios."*  
-It contains scripts, notebooks, data, and models to reproduce and extend the analyses presented in the paper.
+This repository accompanies the manuscript:
 
-## Table of Contents
-- [Installation](#installation)
-- [Repository Structure](#repository-structure)
-- [Contact](#contact)
-- [Preprint](#Preprint)
+Peña P.G., Iglesias G., Talavera E., Meseguer A.S. & Sanmartin I. (2025). *On the utility of Deep Learning for model classification and parameter estimation on complex diversification scenarios*.
 
----
+## What You Will Find Here
 
-## Installation
+- Deep learning and maximum likelihood workflows for phylogenetic diversification model classification and parameter estimation.
+- Precomputed simulated datasets for multiple tree sizes (`87`, `489`, `674` tips).
+- Pretrained deep learning classifiers and regressors (`.keras` + training metadata).
+- MLE inference outputs for TreePar and DDD on simulated and empirical trees.
+- Jupyter notebooks for dataset generation, training, benchmarking, and empirical prediction.
+- Source modules under `src/` used by notebooks and scripts.
 
-Clone the repository:
-   ```bash
-   git clone https://github.com/pablogpena/deep_birth_death.git
-   cd deep_birth_death
+## Repository Layout
+
+- `deep_learning/`: deep learning notebooks, models, serialized datasets, calibration temperatures, and revision experiments.
+- `MLE/`: TreePar and DDD scripts, notebooks, and saved inference outputs.
+- `simulations/`: simulation scripts and generated datasets used in DL and MLE workflows.
+- `src/`: reusable Python/R utilities for encoding, dataset loading, evaluation, and MLE helpers.
+- `empirical/`: empirical phylogenies and confidence-interval figures.
+- `envs/`: conda/micromamba environment stubs.
+
+## Quick Start
+
+```bash
+git clone https://github.com/pablogpena/deep_birth_death.git
+cd deep_birth_death
 ```
-## Repository Structure 
 
-- **/deep_learning/** – All features for Deep Learning:
-    - Notebooks for data generation, model training/testing, and empirical inference.
-    - **models/** – Trained classification and regression DL models, and training data.
-    - **pickles/** – Generated simulation datasets for model training and testing.
-    - **revision_test/** – Experiments performed after the first manuscript revision.
-    - **temperatures/** – Data used to scale softmax probabilities.
-- **/MLE/** – All features for Maximum Likelihood Estimation:
-    - Notebooks for model selection, parameter inference, and empirical analyses using MLE.
-    - **DDD/** – Scripts for running DDD on simulated and empirical trees.
-    - **TreePar/** – Scripts for running TreePar on simulated and empirical trees.
-    - **inference_data/** – Results of MLE inference.
-    - inference_example.txt – Instructions for running DDD and TreePar. 
-- **/envs/** – Conda environments for performing MLE inference:
-    - `treepar.yml` – Environment for TreePar.
-    - `r_env.yml` – Environment for DDD.
-- **/simulations/** – Jupyter notebooks for exploratory analysis and visualization.
-    - Code to define parameter simulation bounds and notebooks for rescaling them.
-    - **treepar_dataset/** – Dataset used for MLE.
-    - **simulated_trees/** – Dataset used for DL.
-    - **code/** – Scripts for simulation with TreeSim.
-- **/empirical/** – Empirical datasets: phylogenetic trees of eucalypts, conifers, and cetaceans.
-- **/src/** – Functions for creating datasets, training/testing DL models, performing MLE inference, and evaluating DL and MLE results.
+## Typical Workflows
 
-  ## Contact
+### 1) Use pretrained DL models for empirical prediction
 
-For questions or suggestions regarding this repository, please contact:
+- Main notebook: `deep_learning/Empirical_Phylogenies_Prediction.ipynb`
+- Required assets are in `deep_learning/models/`, `deep_learning/temperatures/`, and `empirical/*.nwk`.
 
-- **Pablo G. Peña** – Email: pgutierrez@rjb.csic.es
-- **Guillermo Iglesias** - Email: guillermo.iglesias@upm.es
-- GitHubs: [https://github.com/pablogpena](https://github.com/pablogpena), [https://github.com/guillermoih](https://github.com/guillermoih)
+### 2) Rebuild datasets and train DL models
 
-  ## Preprint
-  Peña P.G., Iglesias G., Talavera E., Meseguer A.S. & Sanmartín I. (2025) *On the utility of Deep Learning for model classification and parameter estimation on complex diversification scenarios*. [bioRxiv](https://www.biorxiv.org/content/10.1101/2025.01.01.123456)
+Suggested notebook order:
+
+1. `deep_learning/Generate_Raw_Data.ipynb`
+2. `deep_learning/Generate_Dataset.ipynb`
+3. `deep_learning/Train_Models.ipynb`
+4. `deep_learning/Results_Classification_Simulations.ipynb`
+5. `deep_learning/Results_Regression_Simulations.ipynb`
+6. `deep_learning/Results_Classification_Treepar_Data.ipynb`
+7. `deep_learning/Results_Regression_Treepar_Data.ipynb`
+
+### 3) Run MLE inference (TreePar and DDD)
+
+Example commands:
+
+```bash
+cd MLE/DDD
+bash run_DDD.sh /absolute/path/to/deep_birth_death/simulations/treepar_dataset/674
+bash run_DDD_empiric.sh
+
+cd ../TreePar
+bash run_TreePar.sh /absolute/path/to/deep_birth_death/simulations/treepar_dataset/674
+bash run_TreePar_empiric.sh
+```
+
+Results are saved under `MLE/inference_data/`.
+
+Associated analysis notebooks:
+
+- `MLE/classification_results.ipynb`
+- `MLE/regression_results.ipynb`
+- `MLE/empiric_results.ipynb`
+
+### 4) Simulate new phylogenies
+
+Simulation scripts are in `simulations/code/`:
+
+- `sim_phylogeny.r`
+- `sim_DD.r`
+- `simulate_all.sh`
+- configuration files in `simulations/config_sim.r` and `simulations/config_sim_real_rho.r`
+
+Example (simulate all scenarios):
+
+```bash
+cd simulations/code
+
+# Simulate BD, HE, ME, SR and WW
+bash simulate_all.sh BD HE ME SR WW
+
+# Simulate DD scenarios
+Rscript sim_DD.r
+```
+
+## Contact
+
+- Pablo G. Peña: `pgutierrez@rjb.csic.es`
+
+
+## Preprint
+
+Peña P.G., Iglesias G., Talavera E., Meseguer A.S. & Sanmartin I. (2025). *On the utility of Deep Learning for model classification and parameter estimation on complex diversification scenarios*.
+
+bioRxiv: https://www.biorxiv.org/content/10.1101/2025.01.01.123456
   
